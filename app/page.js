@@ -10,6 +10,14 @@ export default function Trazado() {
   const [strokeStyle, setStrokeStyle] = useState("#000000");
   const [image, setImage] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [puntosCefalometricos, setPuntosCefalometricos] = useState([]);
+
+  const addCephalometricPoint = (e) => {
+    if (!imageLoaded) return;
+    const x = e.nativeEvent.offsetX;
+    const y = e.nativeEvent.offsetY;
+    setPuntosCefalometricos([...puntosCefalometricos, { x, y }]);
+  };
 
   const drawImage = useCallback(() => {
     console.log("drawImage", !!image, !imageLoaded);
@@ -27,24 +35,6 @@ export default function Trazado() {
     }
   }, [image, imageLoaded]);
 
-  /*
-  const drawImage = useCallback(() => {
-    if (image && canvasRef.current && !imageLoaded) {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
-      const img = new Image();
-      img.onload = () => {
-        // Ajusta el tamaño del canvas al de la imagen
-        canvas.width = img.width;
-        canvas.height = img.height;
-        context.drawImage(img, 0, 0);
-        setImageLoaded(true); // Set the image as loaded
-      };
-      img.src = image;
-    }
-  }, [image, imageLoaded]);
-*/
-
   useEffect(() => {
     drawImage();
   }, [drawImage]);
@@ -57,6 +47,9 @@ export default function Trazado() {
         imageLoaded={imageLoaded}
         lineWidth={lineWidth}
         strokeStyle={strokeStyle}
+        puntosCefalometricos={puntosCefalometricos}
+        setPuntosCefalometricos={setPuntosCefalometricos}
+        addCephalometricPoint={addCephalometricPoint}
       />
       <Toolbar
         lineWidth={lineWidth}
