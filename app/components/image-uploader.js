@@ -1,10 +1,8 @@
-import { useState } from "react";
-
 export default function ImageUploader({ setImage, setImageLoaded }) {
-  const handleImageChange = (e) => {
+  const handleImageChange = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       setImage(event.target.result);
       setImageLoaded(false);
     };

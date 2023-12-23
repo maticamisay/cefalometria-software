@@ -1,18 +1,18 @@
-"use client";
-import { useRef, useState, useEffect, useCallback } from "react";
-import Toolbar from "./components/toolbar";
-import Canvas from "./components/canvas";
-import ImageUploader from "./components/image-uploader";
+'use client';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import Canvas from './components/canvas';
+import ImageUploader from './components/image-uploader';
+import Toolbar from './components/toolbar';
 
 export default function Trazado() {
   const canvasRef = useRef(null);
   const [lineWidth, setLineWidth] = useState(5);
-  const [strokeStyle, setStrokeStyle] = useState("#000000");
+  const [strokeStyle, setStrokeStyle] = useState('#000000');
   const [image, setImage] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [puntosCefalometricos, setPuntosCefalometricos] = useState([]);
 
-  const addCephalometricPoint = (e) => {
+  const addCephalometricPoint = e => {
     if (!imageLoaded) return;
     const x = e.nativeEvent.offsetX;
     const y = e.nativeEvent.offsetY;
@@ -20,10 +20,10 @@ export default function Trazado() {
   };
 
   const drawImage = useCallback(() => {
-    console.log("drawImage", !!image, !imageLoaded);
+    console.log('drawImage', !!image, !imageLoaded);
     if (!!image && canvasRef.current && !imageLoaded) {
       const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext('2d');
       const img = new Image();
       img.onload = () => {
         canvas.width = img.width;

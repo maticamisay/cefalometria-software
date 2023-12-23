@@ -1,9 +1,4 @@
-export default function Toolbar({
-  lineWidth,
-  setLineWidth,
-  strokeStyle,
-  setStrokeStyle,
-}) {
+export default function Toolbar({ lineWidth, setLineWidth, strokeStyle, setStrokeStyle }) {
   return (
     <div>
       <div>
@@ -14,7 +9,7 @@ export default function Toolbar({
           min="1"
           max="20"
           value={lineWidth}
-          onChange={(e) => setLineWidth(e.target.value)}
+          onChange={e => setLineWidth(e.target.value)}
         />
       </div>
       <div>
@@ -23,7 +18,7 @@ export default function Toolbar({
           id="strokeStyle"
           type="color"
           value={strokeStyle}
-          onChange={(e) => setStrokeStyle(e.target.value)}
+          onChange={e => setStrokeStyle(e.target.value)}
         />
       </div>
     </div>
