@@ -6,8 +6,6 @@ import Toolbar from './components/toolbar';
 
 export default function Trazado() {
   const canvasRef = useRef(null);
-  const [lineWidth, setLineWidth] = useState(5);
-  const [strokeStyle, setStrokeStyle] = useState('#000000');
   const [image, setImage] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [puntosCefalometricos, setPuntosCefalometricos] = useState([]);
@@ -20,7 +18,6 @@ export default function Trazado() {
   };
 
   const drawImage = useCallback(() => {
-    console.log('drawImage', !!image, !imageLoaded);
     if (!!image && canvasRef.current && !imageLoaded) {
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
@@ -45,18 +42,11 @@ export default function Trazado() {
         canvasRef={canvasRef}
         image={image}
         imageLoaded={imageLoaded}
-        lineWidth={lineWidth}
-        strokeStyle={strokeStyle}
         puntosCefalometricos={puntosCefalometricos}
         setPuntosCefalometricos={setPuntosCefalometricos}
         addCephalometricPoint={addCephalometricPoint}
       />
-      <Toolbar
-        lineWidth={lineWidth}
-        setLineWidth={setLineWidth}
-        strokeStyle={strokeStyle}
-        setStrokeStyle={setStrokeStyle}
-      />
+      <Toolbar />
     </div>
   );
 }
