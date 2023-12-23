@@ -4,17 +4,15 @@ import Canvas from './components/canvas';
 import ImageUploader from './components/image-uploader';
 import Toolbar from './components/toolbar';
 
-export default function Trazado() {
+export default function MainComponent() {
   const canvasRef = useRef(null);
   const [image, setImage] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [puntosCefalometricos, setPuntosCefalometricos] = useState([]);
+  const [isTracing, setIsTracing] = useState(false);
 
-  const addCephalometricPoint = e => {
-    if (!imageLoaded) return;
-    const x = e.nativeEvent.offsetX;
-    const y = e.nativeEvent.offsetY;
-    setPuntosCefalometricos([...puntosCefalometricos, { x, y }]);
+  const addCephalometricPoint = point => {
+    setPuntosCefalometricos([...puntosCefalometricos, point]);
   };
 
   const drawImage = useCallback(() => {
@@ -45,8 +43,10 @@ export default function Trazado() {
         puntosCefalometricos={puntosCefalometricos}
         setPuntosCefalometricos={setPuntosCefalometricos}
         addCephalometricPoint={addCephalometricPoint}
+        isTracing={isTracing}
+        setIsTracing={setIsTracing}
       />
-      <Toolbar />
+      <Toolbar isTracing={isTracing} setIsTracing={setIsTracing} />
     </div>
   );
 }
