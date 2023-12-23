@@ -1,13 +1,59 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Canvas({
   canvasRef,
   imageLoaded,
   puntosCefalometricos,
+  setPuntosCefalometricos,
   addCephalometricPoint,
   isTracing,
   setIsTracing,
 }) {
+  const [dragging, setDragging] = useState(false);
+  const [draggingPointIndex, setDraggingPointIndex] = useState(null);
+
+  const handleMouseDown = e => {
+    if (!imageLoaded || isTracing) return; // Asegurarse de que no esté trazando
+
+    const mouseX = e.nativeEvent.offsetX;
+    const mouseY = e.nativeEvent.offsetY;
+
+    // Detectar si se hizo clic en algún punto cefalométrico
+    const radius = 5; // El radio del punto dibujado
+    const clickedIndex = puntosCefalometricos.findIndex(punto => {
+      return Math.sqrt(Math.pow(punto.x - mouseX, 2) + Math.pow(punto.y - mouseY, 2)) < radius;
+    });
+
+    if (clickedIndex !== -1) {
+      setDragging(true);
+      setDraggingPointIndex(clickedIndex);
+    }
+  };
+
+  const handleMouseMove = e => {
+    if (!imageLoaded || !dragging || isTracing) return; // Asegurarse de que no esté trazando
+
+    const newX = e.nativeEvent.offsetX;
+    const newY = e.nativeEvent.offsetY;
+
+    // Actualizar la posición del punto que se está arrastrando
+    const updatedPoints = puntosCefalometricos.map((punto, index) => {
+      if (index === draggingPointIndex) {
+        return { ...punto, x: newX, y: newY };
+      }
+      return punto;
+    });
+
+    setPuntosCefalometricos(updatedPoints);
+  };
+
+  const handleMouseUp = () => {
+    if (!imageLoaded || isTracing) return; // Asegurarse de que no esté trazando
+
+    setDragging(false);
+    setDraggingPointIndex(null);
+  };
+
   const handleCanvasClick = e => {
     if (!imageLoaded || !isTracing) return;
 
@@ -70,6 +116,30 @@ export default function Canvas({
   useEffect(() => {
     drawCephalometricPoints();
   }, [drawCephalometricPoints]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.addEventListener('mousedown', handleMouseDown);
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseup', handleMouseUp);
+
+      // Limpieza de eventos
+      return () => {
+        canvas.removeEventListener('mousedown', handleMouseDown);
+        canvas.removeEventListener('mousemove', handleMouseMove);
+        canvas.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [
+    imageLoaded,
+    canvasRef,
+    dragging,
+    draggingPointIndex,
+    puntosCefalometricos,
+    setPuntosCefalometricos,
+    isTracing,
+  ]);
 
   return (
     <canvas ref={canvasRef} style={{ border: '1px solid #000' }} onClick={handleCanvasClick} />
